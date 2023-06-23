@@ -21,12 +21,12 @@ public class PostServlet extends HttpServlet {
 
         }
         if (action.equals("Crear")) {
-            req.setAttribute("listaTrabajos", jobDao.listarTrabajos());
+            /*req.setAttribute("listaTrabajos", jobDao.listarTrabajos());
             req.setAttribute("listaDepartamentos", departmentDao.listaDepartamentos());
             req.setAttribute("listaJefes", employeeDao.listarEmpleados());
 
             view = req.getRequestDispatcher("employees/formularioNuevo.jsp");
-            view.forward(req, resp);
+            view.forward(req, resp);*/
         }
     }
 
