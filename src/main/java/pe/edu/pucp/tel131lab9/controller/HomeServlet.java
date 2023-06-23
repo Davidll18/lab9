@@ -20,26 +20,8 @@ public class HomeServlet extends HttpServlet {
         PostDao postDao = new PostDao();
 
         request.setAttribute("posts", postDao.listPosts());
+        request.setAttribute("comments", postDao.listcomments());
         view = request.getRequestDispatcher("home.jsp");
         view.forward(request, response);
-    }
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-
-        String action = request.getParameter("action");
-        PostDao postDao = new PostDao();
-        switch (action) {
-            case "buscar":
-                String textoBuscar = request.getParameter("textoBuscar");
-                if (textoBuscar == null) {
-                    response.sendRedirect("HomeServlet");
-                } else {
-                    request.setAttribute("textoBusqueda", textoBuscar);
-                    request.setAttribute("listaEmpleados", postDao.buscarPost(textoBuscar));
-                    RequestDispatcher view = request.getRequestDispatcher("HomeServlet");
-                    view.forward(request, response);
-                }
-                break;
-        }
     }
 }

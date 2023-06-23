@@ -2,6 +2,7 @@ package pe.edu.pucp.tel131lab9.dao;
 
 import pe.edu.pucp.tel131lab9.bean.Employee;
 import pe.edu.pucp.tel131lab9.bean.Post;
+import pe.edu.pucp.tel131lab9.dto.PostDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,7 +15,11 @@ public class PostDao extends DaoBase{
 
         ArrayList<Post> posts = new ArrayList<>();
 
-        String sql = "SELECT * FROM post left join employees e on e.employee_id = post.employee_id";
+        String sql = "SELECT p.post_id, p.title, p.content, e.employee_id, p.datetime, e.first_name, e.last_name, COUNT(c.post_id)\n" +
+                "FROM post p \n" +
+                "left join employees e on e.employee_id = p.employee_id\n" +
+                "left join comments c on c.post_id = p.post_id\n" +
+                "group by p.post_id;";
 
         try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
@@ -61,49 +66,43 @@ public class PostDao extends DaoBase{
 
         return post;
     }
+    public ArrayList<PostDTO> listcomments() {
 
+        ArrayList<PostDTO> listcomments = new ArrayList<>();
+
+        String sql = "SELECT COUNT(c.post_id) as 'cant_post',c.post_id FROM comments c inner join post p on c.post_id = p.post_id GROUP BY c.post_id;";
+
+        try (Connection conn = this.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                PostDTO postdto = new PostDTO();
+                fetchPostDTO(postdto, rs);
+                listcomments.add(postdto);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PostDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return listcomments;
+    }
+
+    private void fetchPostDTO(PostDTO postdto, ResultSet rs) throws SQLException {
+        postdto.setCant_post(rs.getInt(1));
+        postdto.setPost_id(rs.getInt(2));
+    }
     private void fetchPostData(Post post, ResultSet rs) throws SQLException {
-        post.setPostId(rs.getInt(1));
-        post.setTitle(rs.getString(2));
-        post.setContent(rs.getString(3));
+        post.setPostId(rs.getInt("post_id"));
+        post.setTitle(rs.getString("title"));
+        post.setContent(rs.getString("content"));
         post.setEmployeeId(rs.getInt(4));
+        post.setDatetime(rs.getTimestamp(5));
 
         Employee employee = new Employee();
         employee.setEmployeeId(rs.getInt("e.employee_id"));
         employee.setFirstName(rs.getString("e.first_name"));
         employee.setLastName(rs.getString("e.last_name"));
         post.setEmployee(employee);
-    }
-
-    public ArrayList<Post> buscarPost(String name) {
-
-        ArrayList<Post> listaBuscarPost = new ArrayList<>();
-
-        String sql = "select * from post p\n" +
-                "inner join employees e on e.employee_id = p.employee_id\n" +
-                "where p.content = ? or p.title = ? or e.first_name = ? or e.last_name = ?;";
-
-        try (Connection conn = this.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, name);
-            pstmt.setString(2, name);
-            pstmt.setString(3, name);
-            pstmt.setString(4, name);
-
-            try (ResultSet rs = pstmt.executeQuery()) {
-
-                while (rs.next()) {
-                    Post post = new Post();
-                    fetchPostData(post, rs);
-
-                    listaBuscarPost.add(post);
-                }
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return listaBuscarPost;
     }
 
 }

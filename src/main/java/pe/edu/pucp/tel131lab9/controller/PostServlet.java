@@ -20,6 +20,14 @@ public class PostServlet extends HttpServlet {
         if (action.equals("comment")) {
 
         }
+        if (action.equals("Crear")) {
+            req.setAttribute("listaTrabajos", jobDao.listarTrabajos());
+            req.setAttribute("listaDepartamentos", departmentDao.listaDepartamentos());
+            req.setAttribute("listaJefes", employeeDao.listarEmpleados());
+
+            view = req.getRequestDispatcher("employees/formularioNuevo.jsp");
+            view.forward(req, resp);
+        }
     }
 
     @Override
@@ -28,9 +36,7 @@ public class PostServlet extends HttpServlet {
         String action = req.getParameter("action") != null ? req.getParameter("action") : "";
 
         if (action.equals("new")) {
-
-            view = req.getRequestDispatcher("post/newPost.jsp");
-            view.forward(req, resp);
+            // TODO
         }
         else if (action.equals("view")) {
             String id = req.getParameter("id") != null ? req.getParameter("id") : "";

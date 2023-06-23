@@ -8,16 +8,7 @@ public class Post {
     private String content;
     private int employeeId;
     private Employee employee;
-
-    private Timestamp DateTime;
-
-    public Timestamp getDateTime() {
-        return DateTime;
-    }
-
-    public void setDateTime(Timestamp dateTime) {
-        DateTime = dateTime;
-    }
+    private Timestamp datetime;
 
     public Employee getEmployee() {
         return employee;
@@ -53,6 +44,14 @@ public class Post {
 
     public int getEmployeeId() {
         return employeeId;
+    }
+
+    public Timestamp getDatetime() {
+        return datetime;
+    }
+
+    public void setDatetime(Timestamp datetime) {
+        this.datetime = datetime;
     }
 
     public void setEmployeeId(int employeeId) {
