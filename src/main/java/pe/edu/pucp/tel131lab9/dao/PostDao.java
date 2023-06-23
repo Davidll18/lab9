@@ -75,4 +75,35 @@ public class PostDao extends DaoBase{
         post.setEmployee(employee);
     }
 
+    public ArrayList<Post> buscarPost(String name) {
+
+        ArrayList<Post> listaBuscarPost = new ArrayList<>();
+
+        String sql = "select * from post p\n" +
+                "inner join employees e on e.employee_id = p.employee_id\n" +
+                "where p.content = ? or p.title = ? or e.first_name = ? or e.last_name = ?;";
+
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, name);
+            pstmt.setString(2, name);
+            pstmt.setString(3, name);
+            pstmt.setString(4, name);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+
+                while (rs.next()) {
+                    Post post = new Post();
+                    fetchPostData(post, rs);
+
+                    listaBuscarPost.add(post);
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return listaBuscarPost;
+    }
+
 }

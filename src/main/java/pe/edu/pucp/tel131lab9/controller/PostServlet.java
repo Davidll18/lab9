@@ -28,7 +28,9 @@ public class PostServlet extends HttpServlet {
         String action = req.getParameter("action") != null ? req.getParameter("action") : "";
 
         if (action.equals("new")) {
-            // TODO
+
+            view = req.getRequestDispatcher("post/newPost.jsp");
+            view.forward(req, resp);
         }
         else if (action.equals("view")) {
             String id = req.getParameter("id") != null ? req.getParameter("id") : "";

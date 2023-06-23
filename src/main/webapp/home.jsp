@@ -2,6 +2,8 @@
 <%@ page import="pe.edu.pucp.tel131lab9.bean.Post" %>
 <jsp:useBean id="posts" type="java.util.ArrayList<pe.edu.pucp.tel131lab9.bean.Post>" scope="request"/>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
+<jsp:useBean id="textoBusqueda" scope="request" type="java.lang.String" class="java.lang.String"/>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +11,7 @@
     <title>Home</title>
     <jsp:include page="includes/headCss.jsp"></jsp:include>
 </head>
+
 <body>
 <div class='container'>
     <jsp:include page="includes/navbar.jsp">
@@ -17,6 +20,18 @@
     <div class="row mb-5 mt-4">
         <div class="col-md-7">
             <h1>Home</h1>
+            <form method="post" action="<%=request.getContextPath()%>/HomeServlet?action=buscar">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Search Posts" name="textoBuscar"
+                           value="<%=textoBusqueda%>"/>
+                    <button class="input-group-text" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    <a class="input-group-text" href="<%=request.getContextPath()%>/HomeServlet">
+                        <i class="bi bi-x-circle"></i>
+                    </a>
+                </div>
+            </form>
         </div>
         <div class="col-md-5 col-lg-4 ms-auto my-auto text-md-end">
             <a href="<%= request.getContextPath()%>/PostServlet?action=new" class="btn btn-primary">New Post</a>
